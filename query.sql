@@ -64,4 +64,28 @@ SELECT
   (SELECT COUNT(*) FROM product WHERE category_id = pc.id) AS product_count
 FROM product_category pc;
 
+-- 18. INNER JOIN: Show each product with its category name
+SELECT
+  p.name AS product_name,
+  pc.name AS category_name
+FROM product p
+JOIN product_category pc
+  ON p.category_id = pc.id;
+
+-- 19. INNER JOIN + WHERE: Only products in the 'Food' category
+SELECT
+  p.name AS product_name,
+  pc.name AS category_name
+FROM product p
+JOIN product_category pc
+  ON p.category_id = pc.id
+WHERE pc.name = 'Food';
+
+-- 20. LEFT JOIN: Show all categories, even if they have no products
+SELECT
+  pc.name AS category_name,
+  p.name AS product_name
+FROM product_category pc
+LEFT JOIN product p
+  ON pc.id = p.category_id;
 
