@@ -89,3 +89,51 @@ FROM product_category pc
 LEFT JOIN product p
   ON pc.id = p.category_id;
 
+-- 21. Subquery in JOIN: filtering categories whose names contain 'o'
+SELECT *
+FROM product p
+JOIN (
+  SELECT * FROM product_category
+  WHERE LOWER(name) LIKE '%o%'
+) pc_filtered
+ON p.category_id = pc_filtered.id;
+
+-- 22. Subquery with Aggregation + JOIN: return the name of the top category along with the product count
+SELECT
+  pc.name AS category_name,
+  most_popular.product_count
+FROM (
+  SELECT category_id, COUNT(*) AS product_count
+  FROM product
+  GROUP BY category_id
+  ORDER BY COUNT(*) DESC
+  LIMIT 1
+) most_popular
+JOIN product_category pc
+  ON most_popular.category_id = pc.id;
+
+-- 23. Filtered JOIN via Subquery: show all product and category names only for categories that have more than one product
+SELECT
+  p.name AS product_name,
+  pc.name AS category_name
+FROM product p
+JOIN product_category pc
+  ON p.category_id = pc.id
+WHERE pc.id IN 
+(SELECT category_id
+FROM product
+GROUP BY category_id
+HAVING COUNT(*) > 1);
+
+-- 24. JOIN + Subquery inside SELECT: list each product name along with its category name and the totla number of products in that category
+SELECT
+  p.name AS product_name,
+  pc.name AS category_name,
+  (SELECT COUNT(*) FROM product WHERE category_id = p.category_id) AS num_products_in_category
+FROM product p
+JOIN product_category pc
+  ON p.category_id = pc.id;
+
+
+
+
