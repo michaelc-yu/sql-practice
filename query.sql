@@ -125,7 +125,7 @@ FROM product
 GROUP BY category_id
 HAVING COUNT(*) > 1);
 
--- 24. JOIN + Subquery inside SELECT: list each product name along with its category name and the totla number of products in that category
+-- 24. JOIN + Subquery inside SELECT: list each product name along with its category name and the total number of products in that category
 SELECT
   p.name AS product_name,
   pc.name AS category_name,
