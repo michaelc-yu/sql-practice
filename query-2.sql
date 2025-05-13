@@ -118,4 +118,35 @@ WHERE e.course_id = (
   LIMIT 1
 );
 
+-- 16. List all users who are not enrolled in any course
+SELECT
+  u.name AS user_name
+FROM users u
+WHERE u.id NOT IN (
+  SELECT DISTINCT user_id FROM enrollments
+);
+
+-- 17. For each user, list their name and how many courses they are enrolled in
+SELECT
+  u.name AS user_name,
+  COUNT(e.user_id) AS enrollment_count
+FROM users u
+JOIN enrollments e
+  ON u.id = e.user_id
+GROUP BY u.id;
+
+-- 18. List all users who are enrolled in all courses created before 2019
+SELECT
+  u.name
+FROM users u
+JOIN enrollments e ON u.id = e.user_id
+JOIN courses c ON c.id = e.course_id
+WHERE c.created_at < '2019-01-01'
+GROUP BY u.id, u.name
+HAVING COUNT(DISTINCT c.id) = (
+  SELECT COUNT(*) FROM courses WHERE created_at < '2019-01-01'
+);
+
+
+
 
