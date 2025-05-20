@@ -147,6 +147,32 @@ HAVING COUNT(DISTINCT c.id) = (
   SELECT COUNT(*) FROM courses WHERE created_at < '2019-01-01'
 );
 
+-- 19. List all course titles where more than one user has enrolled, and the title contains the word 'for' (case-insensitive)
+SELECT
+  c.title AS course_title, 
+  COUNT(e.user_id) AS enrollment_count
+FROM courses c
+JOIN enrollments e
+  ON c.id = e.course_id
+WHERE LOWER(c.title) LIKE '%for%'
+GROUP BY c.id
+HAVING COUNT(DISTINCT e.user_id) > 1;
+
+-- 20. Using a CTE, list users who enrolled in more than 1 course, along with how many courses they enrolled in
+WITH user_counts AS (
+  SELECT
+    u.id AS user_id,
+    u.name,
+    COUNT(e.user_id) AS enrollment_count
+  FROM users u
+  JOIN enrollments e
+    ON u.id = e.user_id
+  GROUP BY u.id, u.name
+)
+
+SELECT name, enrollment_count
+FROM user_counts
+WHERE enrollment_count > 1;
 
 
 
